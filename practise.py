@@ -1,49 +1,42 @@
-class Phone:
+class Phone(object):
+
     line_type = 'проводной'
 
     def __init__(self, dial_type_value):
         self.dial_type = dial_type_value
+        # Вот он - защищённый атрибут. Значением будет
+        # ID ячейки памяти аргумента dial_type_value.
+        self._serial_number = id(dial_type_value)
+
+    def ring(self):
+        print('Дзззззыыыыыыыынь!')
+
+    def call(self, phone_number):
+        print(f'Звоню по номеру {phone_number}! Тип связи - {self.line_type}.')
+
+class MobilePhone(Phone):
+    line_type = 'беспроводной'
+    battery_type = 'Li-ion'
+
+    def __init__(self, dial_type_value, network_type):
+        self.__network_type = network_type
+        super().__init__(dial_type_value)
+
+    def ring(self):
+        print('Дзынь-дзынь!')
+
+    # Это публичный метод, в котором используется защищённый атрибут.
+    # Метод определён в классе-наследнике, защищённые атрибуты можно
+    # использовать напрямую в базовом классе и его наследниках.
+    def get_info(self):
+        print(f'Серийный №: {self._serial_number}, тип: {self.__network_type}')
 
 
-rotary_phone = Phone('дисковый')
-keypad_phone = Phone('кнопочный')
+mobile_phone_1 = Phone('дисковый')
+mobile_phone_2 = MobilePhone('сенсорный', 'LTE')
 
-# Печать значения атрибута класса.
-print(f'Тип линии - {rotary_phone.line_type}')
-# Печать значения атрибута объекта.
-print(f'Тип набора - {rotary_phone.dial_type}')
-
-rotary_phone.dial_type = 'кнопочный'
-
-print(f'Тип набора - {rotary_phone.dial_type}')
-
-# Печать значения атрибута класса.
-print(keypad_phone.line_type)
-# Печать значения атрибута объекта.
-print(keypad_phone.dial_type)
-
-print(f'Тип линии: {Phone.line_type}')
-Phone.line_type = 'беспроводной'
-print(f'Тип линии: {Phone.line_type}')
-
-# Создать объект класса Phone.
-rotary_phone = Phone(dial_type_value='дисковый')
-keypad_phone = Phone(dial_type_value='кнопочный')
-
-# Распечатать значение атрибута класса.
-print(f'Тип линии: {rotary_phone.line_type}')
-print(f'Тип линии: {keypad_phone.line_type}')
-
-# Поменять значение атрибута line_type для объекта rotary_phone.
-rotary_phone.line_type = 'радио'
-
-# Снова распечатать значения.
-print(f'Тип линии: {rotary_phone.line_type}')
-print(f'Тип линии: {keypad_phone.line_type}')
-
-# Поменять значение атрибута класса через класс.
-Phone.line_type = 'спутниковый'
-
-# Снова распечатать значения.
-print(f'Тип линии: {rotary_phone.line_type}')
-print(f'Тип линии: {keypad_phone.line_type}')
+# Обращение через метод.
+# Вызвать метод, в котором используется приватный атрибут
+mobile_phone_2.get_info()
+# Вывести приватный атрибут на печать.
+print(mobile_phone_2.__network_type)
